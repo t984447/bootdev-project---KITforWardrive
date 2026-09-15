@@ -1,13 +1,15 @@
 import base.static_variables
-
-from textual.app import App
+import sys
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal
 from textual.widgets import Footer, Header, Static
 
-class DEVICEFEED():
+class DEVICEFEED(Static):
+    ## To be window that fill with device information.
     pass
 
 class MAINWINDOW(Static):
-    """börje"""
+    """början"""
     def compose(self):
         yield DEVICEFEED()
 
@@ -15,12 +17,19 @@ class MAINWINDOW(Static):
 
 class KitApp(App):
     BINDINGS = [
-        ("d", "toggle_dark_mode", "Toggle dark mode")
-    ]
+        ("d", "toggle_dark_mode", "Toggle dark mode"),
+        ("q", "exit_kit", "Exit KIT"),
+    ] # End bindings
+    CSS_PATH = "basecss.tcss"
+
 
     def compose(self):
-        ## What is this app composed of
+        ## What is this app initally composed of
         self.title = "Kistmet in terminal"
+        yield Horizontal(
+                Static(id="devicefeed"),
+                Static(id="messagefeed"),
+        )
         yield Header(show_clock=True)
         yield Footer()
         yield MAINWINDOW()
@@ -28,6 +37,8 @@ class KitApp(App):
     def action_toggle_dark_mode(self):
         self.theme = "textual-dark" if self.theme == "textual-light" else "textual-light"
 
+    def action_exit_kit(self):
+        sys.exit()
 
 
 def main():

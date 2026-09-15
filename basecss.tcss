@@ -1,0 +1,21 @@
+Screen {
+    background: black;
+}
+
+#networks {
+width: 40%;
+    border: solid green;
+    }
+
+#packets {
+    width: 60%;
+    border: solid cyan;
+}
+
+Static {
+    padding: 1;
+}
+
+Horizontal {
+    height: 100%;
+}
