@@ -1,7 +1,8 @@
 import requests
 from constants import *
 
-url = f"{HOST}/devices/views/all_views.json"
+#url = f"{HOST}/devices/views/all_views.json"
+url = f"{HOST}/datasource/all_sources.itjson"
 
 response = requests.get(
     url,
@@ -15,13 +16,17 @@ data = response.json()
 #print(data)
 
 
-from pprint import pprint
+#from pprint import pprint
 
 #pprint(data)
 
-for device in data:
-    print(device["kismet.devices.view.id"])
-    print(device["kismet.devices.view.size"])
+#for device in data:
+#    print(device["kismet.devices.view.id"])
+#    print(device["kismet.devices.view.size"])
+
+for uuid in data:
+    print(uuid["kismet.devices.view.id"])
+    print(uuid["kismet.devices.view.size"])
 
 
 class KismetData():
