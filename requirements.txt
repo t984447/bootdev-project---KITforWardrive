@@ -1,0 +1,15 @@
+certifi==2026.7.22
+charset-normalizer==3.5.1
+idna==3.19
+kismet-rest @ git+https://github.com/kismetwireless/python-kismet-rest.git@0bb017f98127e5c6c13490358174316948bb1886
+linkify-it-py==2.2.0
+markdown-it-py==4.2.0
+mdit-py-plugins==0.6.1
+mdurl==0.1.2
+platformdirs==4.11.8
+pygments==2.21.0
+requests==2.34.2
+rich==15.0.0
+textual==8.2.8
+typing-extensions==4.16.0
+urllib3==2.8.0

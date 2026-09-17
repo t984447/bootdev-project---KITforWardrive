@@ -5,8 +5,8 @@ from constants import *
 
 
 # Replace with your Kismet host and an API key (admin role for control)
-ds = Datasources(host_uri=HOST, debug=True)
-ds.set_apikey(TOKENADMIN)
+ds = Datasources(host_uri=HOST, apikey=TOKENADMIN, debug=True)
+#ds.set_apikey(TOKENADMIN)
 
 print(f"{HOST} and {TOKENADMIN}")
 print(f"::: {ds.apikey}")
