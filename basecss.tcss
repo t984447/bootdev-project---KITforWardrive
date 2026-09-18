@@ -1,21 +1,43 @@
-Screen {
-    background: black;
-}
-
-#networks {
-width: 40%;
-    border: solid green;
+#menu {
+        width: 30;
+        height: auto;
+        border: solid cyan;
+        background: black;
     }
 
-#packets {
-    width: 60%;
-    border: solid cyan;
+MainWindow {
+        height: 1fr;
+    }
+
+#DeviceFeed {
+        width: 70%;
+        border: solid green;
+    }
+
+#MessageFeed {
+        width: 30%;
+        border: solid cyan;
+    }
+KismetHeader {
+    width: 100%;
+    height: 3;
 }
 
-Static {
-    padding: 1;
+#wifi {
+    width: 25%;
 }
 
-Horizontal {
-    height: 100%;
+#title {
+    width: 25%;
+    text-align: center;
+}
+
+#bluetooth {
+    width: 25%;
+    text-align: center;
+}
+
+#clock {
+    width: 25%;
+    text-align: right;
 }

@@ -24,7 +24,7 @@ class tomtenViews(BaseInterface):
 
 
 class kistmetDataFetch:
-    def __init__(self, hostUrl, kismetToken, loglevel = "INFO") -> None:
+    def __init__(self, hostUrl: str = "http://127.0.01:2501", kismetToken: str = "xxxxxxxxx", loglevel = "INFO") -> None:
         self.__hostUrl = hostUrl
         self.__loglevel = False
         if loglevel == "DEBUG": self.__loglevel = True
@@ -66,25 +66,28 @@ class kistmetDataFetch:
     def printWifiDevicesXSeconds(self, mSeconds: int=10) -> None:
         """ Fetches all devices last modified within mSeconds ago. Prints Device, common-name and signalstrength.
         Provide an INT which represent how many seconds back the list should contain, Default is last 10 seconds """
-        for tDev in self.__kismetDEV.dot11_access_points(last_time=(int(time.time()) - mSeconds),fields=['kismet.device.base.commonname', 'kismet.device.base.signal', 'kismet.device.base.macaddr']):
+        for tDev in self.__kismetDEV.dot11_access_points(last_time=(int(time.time()) - mSeconds),fields=['kismet.device.base.commonname', 'kismet.device.base.signal', 'kismet.device.base.macaddr', 'kismet.device.base.last_time']):
             if tDev['kismet.device.base.commonname'] == tDev['kismet.device.base.macaddr']: nDev = "Hidden SSID" 
             else: nDev = tDev['kismet.device.base.commonname']
-
+            print("---------")
+            print(tDev)
+            print("---------")
             print(f"""
             Name: {nDev}
             Signal: {tDev["kismet.device.base.signal"]["kismet.common.signal.last_signal"]}
             Mac: {tDev["kismet.device.base.macaddr"]}
+            LastTime: {tDev["kismet.device.base.last_time"]}
             """)
             print("---------")
-            #break
+            break
 
     def listWifiDevicesXSeconds(self, mSeconds: int=10) -> list[tuple()]:
         """ Fetches all devices last modified within mSeconds ago. Returns list[tuple] with Device, common-name and signalstrength
         Provide an INT which represent how many seconds back the list should contain, Default is last 10 seconds  """
         deviceList = []
-        for dsrc in self.__kismetDEV.dot11_access_points(last_time=(int(time.time()) - mSeconds),fields=['kismet.device.base.commonname', 'kismet.device.base.signal', 'kismet.device.base.macaddr']):
+        for dsrc in self.__kismetDEV.dot11_access_points(last_time=(int(time.time()) - mSeconds),fields=['kismet.device.base.commonname', 'kismet.device.base.signal', 'kismet.device.base.macaddr', "kismet.device.base.last_time"]):
             if dsrc['kismet.device.base.commonname'] == dsrc['kismet.device.base.macaddr']: nDev = "Hidden SSID" 
             else: nDev = dsrc['kismet.device.base.commonname']
-            
-            deviceList.append((nDev, (dsrc["kismet.device.base.signal"]["kismet.common.signal.last_signal"]), (dsrc["kismet.device.base.macaddr"])))
+            deviceList.append((nDev, (dsrc["kismet.device.base.signal"]["kismet.common.signal.last_signal"]), (dsrc["kismet.device.base.macaddr"]), dsrc["kismet.device.base.last_time"]))
+        deviceList.sort(key=lambda tup: tup[3])
         return deviceList
