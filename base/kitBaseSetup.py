@@ -4,17 +4,18 @@ import os
 
 #### Base setup of functions
 def loadset(path="settings.ini"):
-    ########### Load settngs from path ###########
+    """ Function to create a configParser setting object for settings."""
     kitConfig = configparser.ConfigParser()
     # If the file doesn't exist, we can provide defaults here
     if os.path.exists(path):
         kitConfig.read(path)
     else:
-        print(f"Warning: {path} not found. Using defaults.")
+        print(f"Warning: Failed to read settings, does {path} exist?")
     return kitConfig
 
 
 def setlogger(kitSettings):
+    """ Logger object for the whole KIT app."""
 
     logpath = kitSettings["kitpaths"]["logpath"]
 

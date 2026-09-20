@@ -1,6 +1,6 @@
 import base.static_variables
 from base.kitBaseSetup import setlogger, loadset
-from base.kismetFetch import *
+from base.kismetFetch import kistmetDataFetch
 from base.kitTextual import *
 import sys
 import datetime
@@ -21,9 +21,8 @@ kitLogger = logging.getLogger(__name__)
 ## Setup kismet related objects
 kismetHost = kistmetDataFetch(kitSettings["kismethost"]["hosturl"], kitSettings["kismethost"]["apitoken"], kitSettings["kitsettings"]["loglevel"])
 
+
 ## Visual
-
-
 class KitApp(App):
     def __init__(self, kismet_host):
         super().__init__()
@@ -40,7 +39,6 @@ class KitApp(App):
 
     def compose(self):
         ## What is this app initally composed of
-        #yield Header(show_clock=True)
         yield KismetHeader(kismet_host=self.kismet_host)
         yield Footer()
         yield MainWindow(kismet_host=self.kismet_host)
@@ -53,7 +51,6 @@ class KitApp(App):
         sys.exit()
 
     def action_open_menu(self) -> None:
-        #self.push_screen(MenuScreen())
         self.push_screen(MenuScreen(), callback=self.menu_result)
     
     def menu_result(self, result):
@@ -65,12 +62,6 @@ def main():
     kitAPP = KitApp(kismetHost)
     kitAPP.run()
 
+
 if __name__ == "__main__":
     main()
-
-
-    #kismetHost.printDataSources()
-    #kismetHost.printWifiDevicesXSeconds()
-    
-    #for dev in kismetHost.listWifiDevicesXSeconds():
-    #    print(dev)

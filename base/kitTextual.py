@@ -81,7 +81,8 @@ class KismetHeader(Horizontal):
         yield Static("[Seen WiFi: 0]", id="wifi")
         yield Static("Kismet in Terminal", id="title")
         yield Static("[Seen Bluetooth: 0]", id="bluetooth")
-        yield Static("15:42", id="clock")
+        yield Static("GPS unknown", id="gpsstatus")
+        yield Static("13:37", id="clock")
 
     def update_header(self):
 
@@ -89,17 +90,25 @@ class KismetHeader(Horizontal):
             DSinfo = self.kismet_host.getDataSourcesSeen()
             kitLogger.debug(f"Fetch_Seen, Wifi: {DSinfo['WifiAccessPoint']}, Bluetooth: {DSinfo['Bluetooth']}.")
 
+            # Update header Wifi
             self.query_one("#wifi", Static).update(
             f"[Seen WiFi: {DSinfo['WifiAccessPoint']}]"
             )
 
-
+            ## Update header bluetooth
             self.query_one("#bluetooth", Static).update(
                 f"[Seen Bluetooth: {DSinfo['Bluetooth']}]"
             )
 
-            current_time = datetime.datetime.now().strftime("%H:%M")
+            ## Update header GPS status
+            gpsINFO = self.kismet_host.listGPSstats()
+            if gpsINFO["kismet.common.location.geopoint"][0] == 0 and gpsINFO["kismet.common.location.geopoint"][1] == 0:
+                self.query_one("#gpsstatus", Static).update("no GPS")
+            if gpsINFO["kismet.common.location.geopoint"][0] > 0 and gpsINFO["kismet.common.location.geopoint"][1] > 0:
+                self.query_one("#gpsstatus", Static).update("GPS set")
 
+            ## Update header time
+            current_time = datetime.datetime.now().strftime("%H:%M")
             self.query_one("#clock", Static).update(
                 current_time
             )

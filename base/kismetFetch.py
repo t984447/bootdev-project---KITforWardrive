@@ -1,7 +1,7 @@
 import logging
 #import kismet_rest
 import time
-from kismet_rest import Datasources, Devices, BaseInterface
+from kismet_rest import Datasources, Devices, BaseInterface, GPS
 #from base.base_interface import BaseInterface
 
 kitLogger = logging.getLogger(__name__)
@@ -33,6 +33,7 @@ class kistmetDataFetch:
         self.__kismetDS = Datasources(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
         self.__kismetDEV = Devices(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
         self.__kismetViews = tomtenViews(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
+        self.__kismetGPS = GPS(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
 
     def printDataSources(self) -> None:
         """Print all current collecting devices, sources so to speak."""
@@ -93,3 +94,6 @@ class kistmetDataFetch:
             deviceList.append((nDev, (dsrc["kismet.device.base.signal"]["kismet.common.signal.last_signal"]), (dsrc["kismet.device.base.macaddr"]), dsrc["kismet.device.base.last_time"]))
         deviceList.sort(key=lambda tup: tup[3])
         return deviceList
+
+    def listGPSstats(self):
+        return self.__kismetGPS.current_location()
