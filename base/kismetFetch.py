@@ -10,7 +10,7 @@ class tomtenViews(BaseInterface):
     """Get short data from the viewws over the collecting devices"""
 
     def getNumOfSeen(self) -> dict[str, int]:
-        """Return a dict[str, int] wich contains each type and their seen devices """
+        """Return a dict[str, int] wich contains each type and their seen devices From Views: /devices/views/all_views.json"""
         seenData = {}
         url = f"devices/views/all_views.json"
         collectedViews = self.interact("POST", url)
@@ -21,6 +21,7 @@ class tomtenViews(BaseInterface):
                 seenData["Bluetooth"] = (dView["kismet.devices.view.size"])
 
         return seenData
+    
 
 
 class kistmetDataFetch:
@@ -50,6 +51,7 @@ class kistmetDataFetch:
         for dsrc in self.__kismetDS.all():
             dataSourcesList.append((dsrc["kismet.datasource.uuid"], dsrc["kismet.datasource.name"], dsrc["kismet.datasource.num_packets"]))
         return dataSourcesList
+
 
     def printDataSourcesSeen(self) -> None:
         """ Prints stats from the collecting sources of Wifi access points and Bluetooth """

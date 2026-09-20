@@ -86,17 +86,16 @@ class KismetHeader(Horizontal):
     def update_header(self):
 
         try:
-            DSinfo = self.kismet_host.listDataSources()
-            DSwifiCount = DSinfo[0][2]
-            DSbluetoothCount = DSinfo[1][2]
+            DSinfo = self.kismet_host.getDataSourcesSeen()
+            kitLogger.debug(f"Fetch_Seen, Wifi: {DSinfo['WifiAccessPoint']}, Bluetooth: {DSinfo['Bluetooth']}.")
 
             self.query_one("#wifi", Static).update(
-            f"[Seen WiFi: {DSwifiCount}]"
+            f"[Seen WiFi: {DSinfo['WifiAccessPoint']}]"
             )
 
 
             self.query_one("#bluetooth", Static).update(
-                f"[Seen Bluetooth: {DSbluetoothCount}]"
+                f"[Seen Bluetooth: {DSinfo['Bluetooth']}]"
             )
 
             current_time = datetime.datetime.now().strftime("%H:%M")

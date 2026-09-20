@@ -19,7 +19,7 @@ setlogger(kitSettings)
 kitLogger = logging.getLogger(__name__)
 
 ## Setup kismet related objects
-kismetHost = kistmetDataFetch(kitSettings["kismethost"]["hosturl"], kitSettings["kismethost"]["apitoken"])
+kismetHost = kistmetDataFetch(kitSettings["kismethost"]["hosturl"], kitSettings["kismethost"]["apitoken"], kitSettings["kitsettings"]["loglevel"])
 
 ## Visual
 
@@ -64,7 +64,6 @@ def main():
     kitLogger.debug(f"LET GO, its {datetime.datetime.now()}")
     kitAPP = KitApp(kismetHost)
     kitAPP.run()
-
 
 if __name__ == "__main__":
     main()
