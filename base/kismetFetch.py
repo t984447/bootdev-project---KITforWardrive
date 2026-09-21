@@ -93,9 +93,9 @@ class kistmetDataFetch:
         for dsrc in self.__kismetDEV.dot11_access_points(last_time=(int(time.time()) - mSeconds),fields=['kismet.device.base.commonname', 'kismet.device.base.signal', 'kismet.device.base.macaddr', "kismet.device.base.last_time"]):
             if dsrc['kismet.device.base.commonname'] == dsrc['kismet.device.base.macaddr']: nDev = "Hidden SSID" 
             else: nDev = dsrc['kismet.device.base.commonname']
-            deviceList.append((nDev, (dsrc["kismet.device.base.signal"]["kismet.common.signal.last_signal"]), (dsrc["kismet.device.base.macaddr"]), dsrc["kismet.device.base.last_time"]))
+            deviceList.append((nDev, (dsrc["kismet.device.base.signal"]["kismet.common.signal.last_signal"]), (dsrc["kismet.device.base.macaddr"]), (datetime.fromtimestamp(dsrc["kismet.device.base.last_time"]).strftime("%H:%M:%S"))))
         deviceList.sort(key=lambda tup: tup[3])
-        return deviceList
+        return deviceList[-10:]
 
     def listGPSstats(self):
         return self.__kismetGPS.current_location()
@@ -106,6 +106,7 @@ class kistmetDataFetch:
         fetchedMessages = self.__kismetMessages.all(ts_sec=tsSeconds, ts_usec=msSeconds)
         messageList = []
         for message in fetchedMessages:
+            kitLogger.debug(f"Fetched messages, found {len(message["kismet.messagebus.list"])}")
             for mess in message["kismet.messagebus.list"]:
                 messageList.append(((mess["kismet.messagebus.message_string"]), (datetime.fromtimestamp(mess["kismet.messagebus.message_time"]).strftime("%H:%M:%S"))))
                 

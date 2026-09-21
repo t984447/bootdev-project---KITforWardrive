@@ -6,15 +6,16 @@
     }
 
 MainWindow {
+        width: 100%;
         height: 1fr;
     }
 
-#DeviceFeed {
+#devicefeed {
         width: 70%;
         border: solid green;
     }
 
-#MessageFeed {
+#messagefeed {
         width: 30%;
         border: solid cyan;
     }

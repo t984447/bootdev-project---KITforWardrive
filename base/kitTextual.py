@@ -37,6 +37,34 @@ class MenuScreen(ModalScreen):
     def action_close_menu(self) -> None:
         self.dismiss()
 
+class MessageFeed(Static):
+    """ To be window that fill with message information. """
+    def __init__(self, kismet_host, **kwargs):
+        super().__init__(**kwargs)
+        self.kismet_host = kismet_host
+
+    def on_mount(self):
+        self.set_interval(1.0, self.update_messages)
+    
+    def update_messages(self):
+        output = "no messages"
+        
+        try:
+            messagesColl = self.kismet_host.listMessages()
+            output += (
+                    f"{"time":<10} "
+                    f"{"message":>20} \n"
+                )
+            for message, time in messagesColl:
+                output += (
+                    f"{time:<10} "
+                    f"{message:>20} \n"
+                )
+
+        except Exception as e:
+            output = f"{type(e).__name__}: {e}"
+
+        self.update(output)
 
 class DeviceFeed(Static):
     """ To be window that fill with device information. """
@@ -119,8 +147,6 @@ class KismetHeader(Horizontal):
     def on_mount(self):
         self.set_interval(2.0, self.update_header)
 
-
-
 class MainWindow(Horizontal):
     """ Main window contains two widets that will be split horizontally 70/30.
         One for device and one for messages. """
@@ -133,40 +159,7 @@ class MainWindow(Horizontal):
             kismet_host=self.kismet_host,
             id="devicefeed",
         )
-
         yield MessageFeed(
             kismet_host=self.kismet_host,
             id="messagefeed",
         )
-
-
-class MessageFeed(Static):
-    """ To be window that fill with message information. """
-    def __init__(self, kismet_host, **kwargs):
-        super().__init__(**kwargs)
-        self.kismet_host = kismet_host
-
-
-    def on_mount(self):
-        self.set_interval(1.0, self.update_messages)
-
-    
-    def update_messages(self):
-        output = "no messages"
-        
-        try:
-            devices = self.kismet_host.listMessages()
-            output += (
-                    f"{"time":<10} "
-                    f"{"message":>20} \n"
-                )
-            for message, time in devices:
-                output += (
-                    f"{time:<10} "
-                    f"{message:>20} \n"
-                )
-
-        except Exception as e:
-            output = f"{type(e).__name__}: {e}"
-
-        self.update(output)
