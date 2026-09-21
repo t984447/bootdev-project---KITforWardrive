@@ -1,7 +1,8 @@
 import logging
 #import kismet_rest
+from datetime import datetime
 import time
-from kismet_rest import Datasources, Devices, BaseInterface, GPS
+from kismet_rest import Datasources, Devices, BaseInterface, GPS, Messages
 #from base.base_interface import BaseInterface
 
 kitLogger = logging.getLogger(__name__)
@@ -34,6 +35,7 @@ class kistmetDataFetch:
         self.__kismetDEV = Devices(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
         self.__kismetViews = tomtenViews(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
         self.__kismetGPS = GPS(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
+        self.__kismetMessages = Messages(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
 
     def printDataSources(self) -> None:
         """Print all current collecting devices, sources so to speak."""
@@ -97,3 +99,18 @@ class kistmetDataFetch:
 
     def listGPSstats(self):
         return self.__kismetGPS.current_location()
+
+    def listMessages(self, tsSeconds: int=1, msSeconds: int=0, ammount: int = 10) -> list[tuple()]:
+        """ Fetches all messages since (tsSeconds).(msSeconds) ago. Returns list[tuple] with message and timestamp, sorted by timestanp
+        Provide an INT Seconds and uSeconds represent how many seconds back the list should contain, Default is last 1.0 seconds  """
+        fetchedMessages = self.__kismetMessages.all(ts_sec=tsSeconds, ts_usec=msSeconds)
+        messageList = []
+        for message in fetchedMessages:
+            for mess in message["kismet.messagebus.list"]:
+                messageList.append(((mess["kismet.messagebus.message_string"]), (datetime.fromtimestamp(mess["kismet.messagebus.message_time"]).strftime("%H:%M:%S"))))
+                
+        messageList.sort(key=lambda tup: tup[1])
+        return messageList[-10:]
+
+    def quickListMessages(self, tsSeconds: int=1, msSeconds: int=0):
+        return self.__kismetMessages.all(ts_sec=tsSeconds, ts_usec=msSeconds)

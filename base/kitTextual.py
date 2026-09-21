@@ -135,10 +135,38 @@ class MainWindow(Horizontal):
         )
 
         yield MessageFeed(
+            kismet_host=self.kismet_host,
             id="messagefeed",
         )
 
 
 class MessageFeed(Static):
     """ To be window that fill with message information. """
-    pass
+    def __init__(self, kismet_host, **kwargs):
+        super().__init__(**kwargs)
+        self.kismet_host = kismet_host
+
+
+    def on_mount(self):
+        self.set_interval(1.0, self.update_messages)
+
+    
+    def update_messages(self):
+        output = "no messages"
+        
+        try:
+            devices = self.kismet_host.listMessages()
+            output += (
+                    f"{"time":<10} "
+                    f"{"message":>20} \n"
+                )
+            for message, time in devices:
+                output += (
+                    f"{time:<10} "
+                    f"{message:>20} \n"
+                )
+
+        except Exception as e:
+            output = f"{type(e).__name__}: {e}"
+
+        self.update(output)
