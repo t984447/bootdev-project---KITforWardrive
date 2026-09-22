@@ -1,6 +1,6 @@
 import logging
-#import kismet_rest
 from datetime import datetime
+import configparser
 import time
 from kismet_rest import Datasources, Devices, BaseInterface, GPS, Messages
 #from base.base_interface import BaseInterface
@@ -26,11 +26,17 @@ class tomtenViews(BaseInterface):
 
 
 class kistmetDataFetch:
-    def __init__(self, hostUrl: str = "http://127.0.01:2501", kismetToken: str = "xxxxxxxxx", loglevel = "INFO") -> None:
-        self.__hostUrl = hostUrl
+    """ Big class to collect all the fetching of data from kismet in any way. While heavily based on kismet-rest code there is my own 
+    class, tomtenViews, for collecting data otherwise not avaiable via kistmet-rest"""
+    def __init__(self, kitsettings: configparser.ConfigParser) -> None:
+        self.__hostUrl = kitsettings["kismethost"]["hosturl"]
         self.__loglevel = False
-        if loglevel == "DEBUG": self.__loglevel = True
-        self.__kismetToken = kismetToken
+        if (kitsettings["kitsettings"]["loglevel"]) == "DEBUG": self.__loglevel = True
+        self.__kismetToken = kitsettings["kismethost"]["apitoken"]
+        self.__maxRowDevice = -abs(kitsettings.getint("feeds","maxrowdevice"))
+        self.__maxRowMessage = -abs(kitsettings.getint("feeds","maxrowmessage"))
+
+        # Objects based on kimet-rest to fetch various data
         self.__kismetDS = Datasources(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
         self.__kismetDEV = Devices(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
         self.__kismetViews = tomtenViews(host_uri=self.__hostUrl, apikey=self.__kismetToken, debug=self.__loglevel)
@@ -95,7 +101,7 @@ class kistmetDataFetch:
             else: nDev = dsrc['kismet.device.base.commonname']
             deviceList.append((nDev, (dsrc["kismet.device.base.signal"]["kismet.common.signal.last_signal"]), (dsrc["kismet.device.base.macaddr"]), (datetime.fromtimestamp(dsrc["kismet.device.base.last_time"]).strftime("%H:%M:%S"))))
         deviceList.sort(key=lambda tup: tup[3])
-        return deviceList[-10:]
+        return deviceList[self.__maxRowDevice:]
 
     def listGPSstats(self):
         return self.__kismetGPS.current_location()
@@ -111,7 +117,7 @@ class kistmetDataFetch:
                 messageList.append(((mess["kismet.messagebus.message_string"]), (datetime.fromtimestamp(mess["kismet.messagebus.message_time"]).strftime("%H:%M:%S"))))
                 
         messageList.sort(key=lambda tup: tup[1])
-        return messageList[-10:]
+        return messageList[self.__maxRowMessage:]
 
     def quickListMessages(self, tsSeconds: int=1, msSeconds: int=0):
         return self.__kismetMessages.all(ts_sec=tsSeconds, ts_usec=msSeconds)
