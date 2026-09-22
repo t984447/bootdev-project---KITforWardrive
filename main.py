@@ -4,9 +4,6 @@ from base.kismetFetch import kistmetDataFetch
 from base.kitTextual import *
 import sys
 import datetime
-import logging
-#import os
-#import configparser
 from pathlib import Path
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal
@@ -76,8 +73,9 @@ class KitApp(App):
 def main():
     kitLogger.debug(f"LET GO, its {datetime.datetime.now()}")
     kitAPP = KitApp(kismetHost)
-    kitAPP.run()
+    #kitAPP.run()
 
+    print(type(kitSettings))
 
 if __name__ == "__main__":
     main()
