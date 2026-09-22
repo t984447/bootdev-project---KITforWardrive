@@ -59,14 +59,17 @@ class KitApp(App):
 
     def toggle_messages(self):
         message_feed = self.query_one("#messagefeed", MessageFeed)
+        device_feed = self.query_one("#devicefeed", DeviceFeed)
 
         if self.messages_enabled:
             message_feed.pause_updates()
             message_feed.display = False
+            device_feed.styles.width = "100%"
             self.messages_enabled = False
         else:
             message_feed.display = True
             message_feed.resume_updates()
+            device_feed.styles.width = "70%"
             self.messages_enabled = True
 
 
