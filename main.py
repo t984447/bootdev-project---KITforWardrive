@@ -27,6 +27,7 @@ class KitApp(App):
     def __init__(self, kismet_host):
         super().__init__()
         self.kismet_host = kismet_host
+        self.messages_enabled = True
 
     BINDINGS = [
         ("d", "toggle_dark_mode", "Toggle dark mode"),
@@ -55,6 +56,18 @@ class KitApp(App):
     
     def menu_result(self, result):
         print(result)
+
+    def toggle_messages(self):
+        message_feed = self.query_one("#messagefeed", MessageFeed)
+
+        if self.messages_enabled:
+            message_feed.pause_updates()
+            message_feed.display = False
+            self.messages_enabled = False
+        else:
+            message_feed.display = True
+            message_feed.resume_updates()
+            self.messages_enabled = True
 
 
 def main():

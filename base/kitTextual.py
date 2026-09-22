@@ -11,9 +11,8 @@ class MenuScreen(ModalScreen):
 
     def compose(self) -> ComposeResult:
         yield OptionList(
-            Option("Networks"),
-            Option("Devices"),
-            Option("Settings"),
+            Option("Toggle messagefeed"),
+            Option("Exit"),
             Option("Exit KIT"),
             id="menu",
         )
@@ -28,6 +27,11 @@ class MenuScreen(ModalScreen):
 
         if event.option.prompt == "Exit KIT":
             self.app.exit()
+        elif event.option.prompt == "Toggle messagefeed":
+            self.app.toggle_messages()
+            self.dismiss()
+        elif event.option.prompt == "Exit":
+            self.dismiss()
         else:
             print(f"Selected: {event.option.prompt}")
 
@@ -44,6 +48,15 @@ class MessageFeed(Static):
         super().__init__(**kwargs)
         self.kismet_host = kismet_host
         self.__updateFREQtimer = updatefreq
+        self.update_timer = None
+
+    def pause_updates(self):
+        if self.update_timer:
+            self.update_timer.pause()
+
+    def resume_updates(self):
+        if self.update_timer:
+            self.update_timer.resume()
 
     def getUpdateFreq(self) -> float:
         return self.__updateFREQtimer
@@ -66,7 +79,7 @@ class MessageFeed(Static):
         
         try:
             messagesColl = self.kismet_host.listMessages()
-            output += (
+            output = (
                     f"{"time":<10} "
                     f"{"message":>20} \n"
                 )

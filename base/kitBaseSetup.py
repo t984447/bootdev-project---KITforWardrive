@@ -1,17 +1,34 @@
 import logging
 import configparser
 import os
+import sys
 
 #### Base setup of functions
 def loadset(path="settings.ini"):
     """ Function to create a configParser setting object for settings."""
     kitConfig = configparser.ConfigParser()
-    # If the file doesn't exist, we can provide defaults here
+    # If the file doesn't exist just exit with the warning.
     if os.path.exists(path):
-        kitConfig.read(path)
+        try:
+            kitConfig.read(path)
+        except Exception as e:
+            print(f"Warning: Failed to read settings, is {path} a readable .ini?")
+            print(f"{type(e).__name__}: {e}")
+    else:
+        print(f"Warning: does {path} exist?")
+        sys.exit()
+    return kitConfig
+
+def writeset(path: str, kitsettings: configparser):
+    """ Writes the settings provided via a configparser object """
+    if os.path.exists(path):
+        try:
+            with open(path, 'w') as configfile:
+                kitsettings.write(configfile)
+        except Exception as e:
+            print(f"{type(e).__name__}: {e}")
     else:
         print(f"Warning: Failed to read settings, does {path} exist?")
-    return kitConfig
 
 
 def setlogger(kitSettings):
