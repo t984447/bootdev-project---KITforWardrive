@@ -38,13 +38,28 @@ class MenuScreen(ModalScreen):
         self.dismiss()
 
 class MessageFeed(Static):
-    """ To be window that fill with message information. """
-    def __init__(self, kismet_host, **kwargs):
+    """ To be window that fill with message information.
+    This takes a kistmetDataFetch object and a float for update freqvency. Default is 1.0 seconds """
+    def __init__(self, kismet_host, updatefreq: float = 1.0, **kwargs):
         super().__init__(**kwargs)
         self.kismet_host = kismet_host
+        self.__updateFREQtimer = updatefreq
+
+    def getUpdateFreq(self) -> float:
+        return self.__updateFREQtimer
+    
+    def setUpdateFreq(self, newTimer: float) -> None:
+        kitLogger.debug("Setting new update frequency for:",
+            {self.__class__.__name__},
+            "Current value:",
+            self.__updateFREQtimer,
+            "New value:",
+            newTimer
+        )
+        self.__updateFREQtimer = newTimer
 
     def on_mount(self):
-        self.set_interval(1.0, self.update_messages)
+        self.set_interval(self.__updateFREQtimer, self.update_messages)
     
     def update_messages(self):
         output = "no messages"
@@ -67,13 +82,29 @@ class MessageFeed(Static):
         self.update(output)
 
 class DeviceFeed(Static):
-    """ To be window that fill with device information. """
-    def __init__(self, kismet_host, **kwargs):
+    """ To be window that fill with device information.
+    This takes a kistmetDataFetch object and a float for update freqvency. Default is 1.0 seconds """
+    def __init__(self, kismet_host, updatefreq: float = 1.0, **kwargs):
         super().__init__(**kwargs)
         self.kismet_host = kismet_host
+        self.__updateFREQtimer = updatefreq
+
+    def getUpdateFreq(self) -> float:
+        return self.__updateFREQtimer
+    
+    def setUpdateFreq(self, newTimer: float) -> None:
+        kitLogger.debug("Setting new update frequency for:",
+            {self.__class__.__name__},
+            "Current value:",
+            self.__updateFREQtimer,
+            "New value:",
+            newTimer
+        )
+        self.__updateFREQtimer = newTimer
+
 
     def on_mount(self):
-        self.set_interval(1.0, self.update_devices)
+        self.set_interval(self.__updateFREQtimer, self.update_devices)
 
     def update_devices(self):
         output = ""
@@ -100,10 +131,25 @@ class DeviceFeed(Static):
         self.update(output)
 
 class KismetHeader(Horizontal):
-    """ Instead of the included Textual header I am making my own to include the data points for seen Wifi and Bluetooth. """
-    def __init__(self, kismet_host, **kwargs):
+    """ Instead of the included Textual header I am making my own to include the data points for seen Wifi and Bluetooth. 
+    This takes a kistmetDataFetch object and a float for update freqvency. Default is 2.0 seconds"""
+    def __init__(self, kismet_host, updatefreq: float = 2.0,  **kwargs):
         super().__init__(**kwargs)
         self.kismet_host = kismet_host
+        self.__updateFREQtimer = updatefreq
+
+    def getUpdateFreq(self) -> float:
+        return self.__updateFREQtimer
+    
+    def setUpdateFreq(self, newTimer: float) -> None:
+        kitLogger.debug("Setting new update frequency for:",
+            {self.__class__.__name__},
+            "Current value:",
+            self.__updateFREQtimer,
+            "New value:",
+            newTimer
+        )
+        self.__updateFREQtimer = newTimer
 
     def compose(self) -> ComposeResult:
         yield Static("[Seen WiFi: 0]", id="wifi")
@@ -145,21 +191,25 @@ class KismetHeader(Horizontal):
             print(f"{type(e).__name__}: {e}")
 
     def on_mount(self):
-        self.set_interval(2.0, self.update_header)
+        self.set_interval(self.__updateFREQtimer, self.update_header)
 
 class MainWindow(Horizontal):
     """ Main window contains two widets that will be split horizontally 70/30.
         One for device and one for messages. """
-    def __init__(self, kismet_host):
+    def __init__(self, kismet_host, deviceUpdateFreq: float, messageUpdateFreq: float):
         super().__init__()
         self.kismet_host = kismet_host
+        self.__deviceUpdateFreq = deviceUpdateFreq
+        self.__messageUpdateFreq = messageUpdateFreq
 
     def compose(self):
         yield DeviceFeed(
             kismet_host=self.kismet_host,
+            updatefreq=self.__deviceUpdateFreq,
             id="devicefeed",
         )
         yield MessageFeed(
             kismet_host=self.kismet_host,
+            updatefreq=self.__messageUpdateFreq,
             id="messagefeed",
         )

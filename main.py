@@ -39,9 +39,9 @@ class KitApp(App):
 
     def compose(self):
         ## What is this app initally composed of
-        yield KismetHeader(kismet_host=self.kismet_host)
+        yield KismetHeader(kismet_host=self.kismet_host, updatefreq = kitSettings.getfloat('updatefrequency', 'headerupdate'))
         yield Footer()
-        yield MainWindow(kismet_host=self.kismet_host)
+        yield MainWindow(kismet_host=self.kismet_host, deviceUpdateFreq = kitSettings.getfloat('updatefrequency', 'devicefeed'), messageUpdateFreq = kitSettings.getfloat('updatefrequency', 'messagefeed'))
     
     def action_toggle_dark_mode(self):
         self.theme = "textual-dark" if self.theme == "textual-light" else "textual-light"
