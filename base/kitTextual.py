@@ -79,13 +79,11 @@ class MessageFeed(Static):
         
         try:
             messagesColl = self.kismet_host.listMessages()
-            output = (
-                    f"{"time":<10} "
-                    f"{"message":>20} \n"
-                )
+            output = ""
+            
             for message, time in messagesColl:
                 output += (
-                    f"{time:<10} "
+                    f"{time:<10} \n"
                     f"{message:>20} \n"
                     f"______________________________ \n"
                 )
