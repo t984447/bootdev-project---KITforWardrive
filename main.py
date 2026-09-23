@@ -16,9 +16,7 @@ setlogger(kitSettings)
 kitLogger = logging.getLogger(__name__)
 
 ## Setup kismet related objects
-#kismetHost = kistmetDataFetch(kitSettings["kismethost"]["hosturl"], kitSettings["kismethost"]["apitoken"], kitSettings["kitsettings"]["loglevel"])
 kismetHost = kistmetDataFetch(kitSettings)
-
 
 ## Visual
 class KitApp(App):
