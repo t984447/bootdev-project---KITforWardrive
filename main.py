@@ -60,12 +60,14 @@ class KitApp(App):
         if self.messages_enabled:
             message_feed.pause_updates()
             message_feed.display = False
+            device_feed.set_show_mac(True)
             device_feed.styles.width = "100%"
             self.messages_enabled = False
         else:
             message_feed.display = True
             message_feed.resume_updates()
-            device_feed.styles.width = "70%"
+            device_feed.set_show_mac(False)
+            device_feed.styles.width = "60%"
             self.messages_enabled = True
 
 

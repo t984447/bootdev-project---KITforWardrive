@@ -102,6 +102,10 @@ class DeviceFeed(Static):
         super().__init__(**kwargs)
         self.kismet_host = kismet_host
         self.__updateFREQtimer = updatefreq
+        self.__showMAC = False
+
+    def set_show_mac(self, show: bool) -> None:
+        self.__showMAC = show
 
     def getUpdateFreq(self) -> float:
         return self.__updateFREQtimer
@@ -125,20 +129,33 @@ class DeviceFeed(Static):
         
         try:
             devices = self.kismet_host.listWifiDevicesXSeconds()
-            output += (
-                    f"{"name":<20} "
-                    f"{"sig":>10} dBm "    
-                    f"{"mac":<17}  "
-                    f"{"last seen"}\n"
-                )
-            for name, signal, mac, last_seen in devices:
+            if self.__showMAC:
                 output += (
-                    f"{name:<20} "
-                    f"{signal:>10} dBm "    
-                    f"{mac:<17}  "
-                    f"{last_seen}\n"
-                )
-
+                        f"{"name":<20} "
+                        f"{"sig":>10} dBm    "    
+                        f"{"mac":<17}  "
+                        f"{"last seen"}\n"
+                    )
+            else:
+                output += (
+                        f"{"name":<20} "
+                        f"{"sig":>10} dBm    "
+                        f"{"last seen"}\n"
+                    )
+            for name, signal, mac, last_seen in devices:
+                if self.__showMAC:
+                    output += (
+                        f"{name:<20} "
+                        f"{signal:>10} dBm    "    
+                        f"{mac:<17}  "
+                        f"{last_seen}\n"
+                    )
+                else:
+                    output += (
+                        f"{name:<20} "
+                        f"{signal:>10} dBm    "
+                        f"{last_seen}\n"
+                    )
         except Exception as e:
             output = f"{type(e).__name__}: {e}"
 
