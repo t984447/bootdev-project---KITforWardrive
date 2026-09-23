@@ -5,6 +5,11 @@ make a terminal based UI for kismet that simple pulls information from kismet. T
 
 (!) While I am doing this for learning Python I am using AI as an guidance for certain parts like Textual (since their YT tuts are a tab bit out of date.)
 
+## The grand looks
+<img src="./mdContent/KITAPP_example_image_1.png" alt="KITapp dark" height="300"><img src="./mdContent/KITAPP_example_image_2.png" alt="KITapp dark" height="300">
+<img src="./mdContent/KITAPP_example_image_3.png" alt="KITapp dark" height="300">
+
+
 ## Features
 - Simple UI whith little actual data on screen. 
 - show last devices heard
@@ -40,6 +45,12 @@ Read permissions are enough.
 ```ini
 apitoken = XXXXXXXXXXXXXXXXXXXXXX
 ```
+
+6. Run the application by using UV run command.
+```bash
+uv run main.py
+```
+
 ### Planned todo and plus features
 - Compile to an executable.
 - Run through the code and add loggers where needed.
