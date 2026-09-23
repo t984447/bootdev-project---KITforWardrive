@@ -87,6 +87,7 @@ class MessageFeed(Static):
                 output += (
                     f"{time:<10} "
                     f"{message:>20} \n"
+                    f"______________________________ \n"
                 )
 
         except Exception as e:
@@ -126,14 +127,14 @@ class DeviceFeed(Static):
             devices = self.kismet_host.listWifiDevicesXSeconds()
             output += (
                     f"{"name":<20} "
-                    f"{"signal":>10} dBm  "    
+                    f"{"sig":>10} dBm "    
                     f"{"mac":<17}  "
                     f"{"last seen"}\n"
                 )
             for name, signal, mac, last_seen in devices:
                 output += (
                     f"{name:<20} "
-                    f"{signal:>10} dBm  "    
+                    f"{signal:>10} dBm "    
                     f"{mac:<17}  "
                     f"{last_seen}\n"
                 )

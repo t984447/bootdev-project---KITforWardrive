@@ -11,12 +11,12 @@ MainWindow {
     }
 
 #devicefeed {
-        width: 55%;
+        width: 60%;
         border: solid green;
     }
 
 #messagefeed {
-        width: 45%;
+        width: 40%;
         border: solid cyan;
     }
 KismetHeader {
