@@ -80,12 +80,11 @@ class MessageFeed(Static):
         try:
             messagesColl = self.kismet_host.listMessages()
             output = ""
-            
+
             for message, time in messagesColl:
                 output += (
                     f"{time:<10} \n"
                     f"{message:>20} \n"
-                    f"______________________________ \n"
                 )
 
         except Exception as e:
