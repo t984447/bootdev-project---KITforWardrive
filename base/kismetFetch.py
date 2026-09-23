@@ -92,7 +92,7 @@ class kistmetDataFetch:
             print("---------")
             break
 
-    def listWifiDevicesXSeconds(self, mSeconds: int=10) -> list[tuple()]:
+    def listWifiDevicesXSeconds(self, mSeconds: int=15) -> list[tuple()]:
         """ Fetches all devices last modified within mSeconds ago. Returns list[tuple] with Device, common-name and signalstrength
         Provide an INT which represent how many seconds back the list should contain, Default is last 10 seconds  """
         deviceList = []
@@ -106,7 +106,7 @@ class kistmetDataFetch:
     def listGPSstats(self):
         return self.__kismetGPS.current_location()
 
-    def listMessages(self, tsSeconds: int=1, msSeconds: int=0, ammount: int = 10) -> list[tuple()]:
+    def listMessages(self, tsSeconds: int=1, msSeconds: int=0) -> list[tuple()]:
         """ Fetches all messages since (tsSeconds).(msSeconds) ago. Returns list[tuple] with message and timestamp, sorted by timestanp
         Provide an INT Seconds and uSeconds represent how many seconds back the list should contain, Default is last 1.0 seconds  """
         fetchedMessages = self.__kismetMessages.all(ts_sec=tsSeconds, ts_usec=msSeconds)
